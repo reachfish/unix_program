@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <stdarg.h>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -30,10 +31,27 @@
 	#define SVMSG_MODE  MSG_R | MSG_W  
 #endif
 
+#define FILE_MODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+
 #define MAX_LINE 100
 
-void err_quit(const char* err){
-	fprintf(stderr, "%s\n", err);
+char* err_fmt(const char* fmt, const char* info=NULL){
+	static char buff[MAX_LINE];
+	if(info){
+		snprintf(buff, MAX_LINE, "%s%s\n", info, fmt);
+	}
+	else{
+		snprintf(buff, MAX_LINE, "%s\n", fmt);
+	}
+
+	return buff;
+}
+
+void err_quit(const char* fmt, ...){
+	va_list ap;
+	va_start(ap, fmt);
+	fprintf(stderr, err_fmt(fmt), ap);
+	va_end(ap);
 	exit(-1);
 }
 

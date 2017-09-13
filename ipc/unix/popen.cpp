@@ -1,5 +1,10 @@
 #include "comm.h"
 
+/*
+ 
+popen: 执行命令的管道 
+
+*/
 int main(){
 	size_t n;
 	char buff[MAX_LINE], command[MAX_LINE];

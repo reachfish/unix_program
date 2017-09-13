@@ -1,9 +1,8 @@
-
 #include "comm.h"
 
 /*
  
-pipe: 无名管道，单工
+fifo: 有名管道，半双工，只能为读或写，但不能同为读写
 
 */
 
@@ -34,7 +33,6 @@ void server(int readfd, int writefd){
 	}
 
 	buff[n] = '\0';
-
 	if((fd=open(buff, O_RDONLY)) < 0){
 		snprintf(buff + n, sizeof(buff) - n, ": can't open, %s\n", strerror(errno));
 		n = strlen(buff);
@@ -50,29 +48,39 @@ void server(int readfd, int writefd){
 }
 
 int main(){
-	int pipe1[2], pipe2[2];
+	int readfd, writefd;
 	pid_t childpid;
 
-	pipe(pipe1);
-	pipe(pipe2);
+	const char* fifo1 = "/tmp/fifo1";
+	const char* fifo2 = "/tmp/fifo2";
 
-	//parent  == pipe1 ==> child
-	//parent <== pipe2 ==  child
-	if((childpid = fork()) == 0){ /* child process */
-		close(pipe1[1]);	
-		close(pipe2[0]);
+	if((mkfifo(fifo1, FILE_MODE) < 0) && (errno != EEXIST)){
+		err_quit("can't create %s", fifo1);
+	}
+	if((mkfifo(fifo2, FILE_MODE) < 0) && (errno != EEXIST)){
+		unlink(fifo1);
+		err_quit("can't create %s", fifo2);
+	}
 
-		server(pipe1[0], pipe2[1]);
+	if((childpid=fork()) == 0){ /* child process */
+		readfd = open(fifo1, O_RDONLY, 0);
+		writefd = open(fifo2, O_WRONLY, 0);
 
+		server(readfd, writefd);
 		exit(0);
 	}
 	else{
-		close(pipe1[0]);
-		close(pipe2[1]);
+		writefd = open(fifo1, O_WRONLY, 0);
+		readfd = open(fifo2, O_RDONLY, 0);
 
-		client(pipe2[0], pipe1[1]);
-
+		client(readfd, writefd);
 		waitpid(childpid, NULL, 0);
+
+		close(readfd);
+		close(writefd);
+
+		unlink(fifo1);
+		unlink(fifo2);
 
 		exit(0);
 	}
