@@ -14,10 +14,8 @@ void msqid_(){
 	for(int i=0;i<10; i++){
 		int msqid = msgget(IPC_PRIVATE, SVMSG_MODE | IPC_CREAT);
 		printf("msgid = %d\n", msqid);
-		//msgctl(msqid, IPC_RMID, NULL);
+		msgctl(msqid, IPC_RMID, NULL);
 	}
-
-	//sleep(100);
 }
 
 int main(){

@@ -47,11 +47,19 @@ char* err_fmt(const char* fmt, const char* info=NULL){
 	return buff;
 }
 
-void err_quit(const char* fmt, ...){
+void err_msg(const char* fmt, ...){
 	va_list ap;
 	va_start(ap, fmt);
 	fprintf(stderr, err_fmt(fmt), ap);
 	va_end(ap);
+}
+
+void err_quit(const char* fmt, ...){
+	va_list ap;
+	va_start(ap, fmt);
+	err_msg(fmt, ap);
+	va_end(ap);
+
 	exit(-1);
 }
 
