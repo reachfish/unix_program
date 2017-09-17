@@ -7,11 +7,18 @@
 
 #include <unistd.h>
 #include <fcntl.h>
+#include <time.h>
+
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#define  LISTENQ 10
+typedef struct sockaddr SA;
 
 //For semaphores (from sys/sem.h)
 #define SEM_A 0200 /* alter permission */
