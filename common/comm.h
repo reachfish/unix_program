@@ -65,3 +65,9 @@ void err_quit(const char* fmt, ...){
 	exit(-1);
 }
 
+
+//自动生成.cpp
+//格式: /*cond:(ret < 0)*/
+////////////////////////////////////////
+//posix mqueue
+mqd_t Mq_open(const char *name, int oflag); /*gen*/
