@@ -1,5 +1,6 @@
 #include "comm.h"
 
+#ifdef __LINUX__
 mqd_t Mq_open(const char *name, int oflag) /*gen*/
 {	
 	mqd_t ret = mq_open(name, oflag);
@@ -8,3 +9,4 @@ mqd_t Mq_open(const char *name, int oflag) /*gen*/
 	}
 	return ret;
 }
+#endif

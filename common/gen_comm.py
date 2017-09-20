@@ -4,7 +4,7 @@
 import re 
 
 infile = open("comm.h", "r")
-outfile = open("comm.cpp", "w")
+outfile = open("wrapper.cpp", "w")
 contents = []
 contents.append('#include "comm.h"')
 body = """
@@ -23,7 +23,12 @@ for line in body.split("\n"):
 	if line:
 		bodylist.append(line)
 
+deflinux = False
 for line in infile.readlines():
+	if line.find("ifdef") != -1 and line.find("__LINUX__") != -1:
+		deflinux = True
+	if line.find("endif") != -1:
+		deflinux = False
 	if line.find("/*gen*/") != -1:
 		contents.append("")
 		line = line.replace(";", "").strip()
@@ -39,6 +44,9 @@ for line in infile.readlines():
 		m = re.search(r'/\*cond:\(([^)]+)\)\*/', line)
 		if m:
 			condition = m.group(1)
+
+		if deflinux:
+			contents.append("#ifdef __LINUX__")
 		contents.append(line)
 		for index, bodyline in enumerate(bodylist):
 			style = ()
@@ -49,7 +57,10 @@ for line in infile.readlines():
 			elif index == 3:
 				style = (func,)
 			contents.append(bodyline.format(*style) if style else bodyline)
+		if deflinux:
+			contents.append("#endif")
 
+contents.append("")
 outfile.write("\n".join(contents))
 
 infile.close()

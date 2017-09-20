@@ -15,7 +15,9 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-#include <mqueue.h>
+#ifdef __LINUX__
+	#include <mqueue.h>
+#endif
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -45,30 +47,16 @@ typedef struct sockaddr SA;
 
 #define MAX_LINE 100
 
-char* err_fmt(const char* fmt, const char* info=NULL){
-	static char buff[MAX_LINE];
-	if(info){
-		snprintf(buff, MAX_LINE, "%s%s\n", info, fmt);
-	}
-	else{
-		snprintf(buff, MAX_LINE, "%s\n", fmt);
-	}
+void err_quit(const char* fmt, ...);
 
-	return buff;
-}
+int readn(int fd, void* vptr, size_t n);
+int writen(int fd, const void* vptr, size_t n);
+int readline(int fd, void* vptr, size_t maxlen);
 
-void err_quit(const char* fmt, ...){
-	va_list ap;
-	va_start(ap, fmt);
-	vfprintf(stderr, err_fmt(fmt), ap);
-	va_end(ap);
-
-	exit(-1);
-}
-
-
-//自动生成.cpp
+//自动生成wrapper.cpp
 //格式: /*cond:(ret < 0)*/
 ////////////////////////////////////////
 //posix mqueue
-mqd_t Mq_open(const char *name, int oflag); /*gen*/
+#ifdef __LINUX__
+	mqd_t Mq_open(const char *name, int oflag); /*gen*/
+#endif
