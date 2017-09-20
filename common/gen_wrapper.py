@@ -9,7 +9,7 @@ outfile = open(outname, "w")
 contents = []
 contents.append('#include "comm.h"')
 body = """
-{	
+{
 	{} ret = {}({});
 	if({}){{
 		err_quit("call failed {}(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
@@ -24,18 +24,21 @@ for line in body.split("\n"):
 	if line:
 		bodylist.append(line)
 
-deflinux = False
 genstart = False
 for line in infile.readlines():
 	if line.find("/*gen_start*/") != -1:
 		genstart = True
-	if line.find("ifdef") != -1 and line.find("__LINUX__") != -1:
-		deflinux = True
-	if line.find("endif") != -1:
-		deflinux = False
+
+	if not genstart:
+		continue
 
 	line = line.strip()
-	if (not genstart) or (not line) or (line[0] in "/#"):
+	if (not line) or (line[0] in "/"):
+		continue
+
+	if line.find("#ifdef") != -1 or line.find("#endif") != -1:
+		contents.append("")
+		contents.append(line)
 		continue
 
 	contents.append("")
@@ -53,8 +56,6 @@ for line in infile.readlines():
 	if m:
 		condition = m.group(1)
 
-	if deflinux:
-		contents.append("#ifdef __LINUX__")
 	contents.append(line)
 	for index, bodyline in enumerate(bodylist):
 		style = ()
@@ -65,8 +66,6 @@ for line in infile.readlines():
 		elif index == 3:
 			style = (func,)
 		contents.append(bodyline.format(*style) if style else bodyline)
-	if deflinux:
-		contents.append("#endif")
 
 contents.append("")
 outfile.write("\n".join(contents))
