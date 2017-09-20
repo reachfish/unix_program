@@ -72,6 +72,8 @@ int Listen(int socket, int backlog);
 int Connect(int socket, const struct sockaddr *address, socklen_t address_len);
 int Inet_pton(int af, const char * src, void * dst); 
 int Setsockopt(int socket, int level, int option_name, const void *option_value, socklen_t option_len);
+ssize_t Sendto(int socket, const void *buffer, size_t length, int flags, const struct sockaddr *dest_addr, socklen_t dest_len);
+ssize_t Recvfrom(int socket, void *buffer, size_t length, int flags, struct sockaddr *address, socklen_t *address_len);
 
 //posix mqueue
 #ifdef __LINUX__

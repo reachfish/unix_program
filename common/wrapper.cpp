@@ -54,6 +54,24 @@ int Setsockopt(int socket, int level, int option_name, const void *option_value,
 	return ret;
 }
 
+ssize_t Sendto(int socket, const void *buffer, size_t length, int flags, const struct sockaddr *dest_addr, socklen_t dest_len)
+{
+	ssize_t ret = sendto(socket, buffer, length, flags, dest_addr, dest_len);
+	if(ret < 0){
+		err_quit("call failed sendto(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
+	}
+	return ret;
+}
+
+ssize_t Recvfrom(int socket, void *buffer, size_t length, int flags, struct sockaddr *address, socklen_t *address_len)
+{
+	ssize_t ret = recvfrom(socket, buffer, length, flags, address, address_len);
+	if(ret < 0){
+		err_quit("call failed recvfrom(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
+	}
+	return ret;
+}
+
 #ifdef __LINUX__
 
 mqd_t Mq_open(const char *name, int oflag)
