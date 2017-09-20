@@ -18,6 +18,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #define  LISTENQ 10
+#define  SVRPORT 1234
 typedef struct sockaddr SA;
 
 //For semaphores (from sys/sem.h)
