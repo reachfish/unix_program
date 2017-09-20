@@ -15,6 +15,8 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
+#include <mqueue.h>
+
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #define  LISTENQ 10
@@ -55,19 +57,18 @@ char* err_fmt(const char* fmt, const char* info=NULL){
 	return buff;
 }
 
-void err_msg(const char* fmt, ...){
-	va_list ap;
-	va_start(ap, fmt);
-	fprintf(stderr, err_fmt(fmt), ap);
-	va_end(ap);
-}
-
 void err_quit(const char* fmt, ...){
 	va_list ap;
 	va_start(ap, fmt);
-	err_msg(fmt, ap);
+	vfprintf(stderr, err_fmt(fmt), ap);
 	va_end(ap);
 
 	exit(-1);
 }
 
+
+//自动生成.cpp
+//格式: /*cond:(ret < 0)*/
+////////////////////////////////////////
+//posix mqueue
+mqd_t Mq_open(const char *name, int oflag); /*gen*/
