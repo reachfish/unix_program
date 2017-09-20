@@ -1,5 +1,14 @@
 #include "comm.h"
 
+pid_t Fork(void)
+{
+	pid_t ret = fork();
+	if(ret < 0){
+		err_quit("call failed fork(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
+	}
+	return ret;
+}
+
 int Socket(int domain, int type, int protocol)
 {
 	int ret = socket(domain, type, protocol);

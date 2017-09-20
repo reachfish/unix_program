@@ -48,7 +48,7 @@ for line in infile.readlines():
 	func = leftw[-1].lower()
 	right = line[line.find('(') + 1:line.find(')')]
 	rightw = right.split(",")
-	param = [r.split()[-1].replace("*", "").replace("&","") for r in rightw]
+	param = [r.split()[-1].replace("*", "").replace("&","") for r in rightw if r !="void" ]
 
 	condition = "ret < 0"
 	m = re.search(r'/\*cond:\(([^)]+)\)\*/', line)

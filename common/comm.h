@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <stdarg.h>
 
+#include <syslog.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <time.h>
@@ -59,11 +60,16 @@ int readline(int fd, void* vptr, size_t maxlen);
 
 int setsock_reuse(int fd);
 
+int daemon_init(const char* pname, int facility);
+
 //自动生成wrapper.cpp
 //格式: /*cond:(ret < 0)*/
 ////////////////////////////////////////
 
 /*gen_start*/
+
+//process
+pid_t Fork(void);
 
 //network
 int Socket(int domain, int type, int protocol); 

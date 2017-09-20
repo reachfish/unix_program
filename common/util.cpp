@@ -1,5 +1,7 @@
 #include "comm.h"
 
+static int daemon_proc = 0;
+
 char* err_fmt(const char* fmt, const char* info=NULL){
 	static char buff[MAX_LINE];
 	if(info){
@@ -12,10 +14,26 @@ char* err_fmt(const char* fmt, const char* info=NULL){
 	return buff;
 }
 
+void err_vmsg(const char* fmt, va_list ap){
+	if(daemon_proc == 0){
+		vfprintf(stderr, err_fmt(fmt), ap);
+	}
+	else{
+		vsyslog(LOG_INFO|LOG_USER, err_fmt(fmt), ap);
+	}
+}
+
+void err_msg(const char* fmt, ...){
+	va_list ap;
+	va_start(ap, fmt);
+	err_vmsg(fmt, ap);
+	va_end(ap);
+}
+
 void err_quit(const char* fmt, ...){
 	va_list ap;
 	va_start(ap, fmt);
-	vfprintf(stderr, err_fmt(fmt), ap);
+	err_vmsg(fmt, ap);
 	va_end(ap);
 
 	exit(-1);
@@ -134,4 +152,53 @@ Sigfunc* Signal(int signo, Sigfunc* func){
 	}
 
 	return oact.sa_handler;
+}
+
+int daemon_init(const char* pname, int facility){
+	int i;
+	pid_t pid;
+
+	if((pid = Fork()) < 0){
+		return -1;
+	}
+
+	if(pid){ /* parent terminates */
+		_exit(0); 
+	}
+
+	/* child 1 continue */
+
+	if(setsid() < 0){
+		return -1;
+	}
+
+	Signal(SIGHUP, SIG_IGN);
+
+	if((pid = Fork()) < 0){
+		return -1;
+	}
+
+	if(pid){ /* child 1 terminates */
+		_exit(0); 
+	}
+
+	/* child 2 continue */
+
+	daemon_proc = 1;
+
+	chdir("/");
+
+	const int MAXFD = 64;
+	for(int i=0; i< MAXFD; i++){
+		close(i);
+	}
+
+	/* redirect stdin, stdout, and stderr to /dev/null */
+	open("/dev/null", O_RDONLY);
+	open("/dev/null", O_RDWR);
+	open("/dev/null", O_RDWR);
+
+	openlog(pname, LOG_PID, facility);
+
+	return 0;
 }

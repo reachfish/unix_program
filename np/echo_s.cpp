@@ -23,7 +23,7 @@ void sig_child(int signo){
 	int stat;
 
 	pid = wait(&stat);
-	printf("child %d terminal.\n", pid);
+	err_msg("child %d terminal.\n", pid);
 
 	return;
 }
