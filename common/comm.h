@@ -47,6 +47,10 @@ typedef struct sockaddr SA;
 
 #define MAX_LINE 100
 
+#include <signal.h>
+typedef void Sigfunc(int);
+Sigfunc *Signal(int signo, Sigfunc* func);
+
 void err_quit(const char* fmt, ...);
 
 int readn(int fd, void* vptr, size_t n);

@@ -41,7 +41,6 @@ for line in infile.readlines():
 		contents.append(line)
 		continue
 
-	contents.append("")
 	line = line.replace(";", "").strip()
 	left = line[0:line.find('(')]
 	leftw = left.split()
@@ -56,6 +55,7 @@ for line in infile.readlines():
 	if m:
 		condition = m.group(1)
 
+	contents.append("")
 	contents.append(line)
 	for index, bodyline in enumerate(bodylist):
 		style = ()

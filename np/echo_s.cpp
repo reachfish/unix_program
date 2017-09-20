@@ -18,6 +18,16 @@ void str_echo(int sockfd){
 	}
 }
 
+void sig_child(int signo){
+	pid_t pid;
+	int stat;
+
+	pid = wait(&stat);
+	printf("child %d terminal.\n", pid);
+
+	return;
+}
+
 int main(){
 	int listendfd, connfd;
 	pid_t childpid;
@@ -34,6 +44,7 @@ int main(){
 	setsock_reuse(listendfd);
 	Bind(listendfd, (const SA*)&svraddr, sizeof(svraddr));
 	Listen(listendfd, LISTENQ);
+	Signal(SIGCHLD, sig_child);
 
 	clilen = sizeof(cliaddr);
 	while(true){
