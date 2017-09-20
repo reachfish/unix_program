@@ -22,7 +22,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #define  LISTENQ 10
-#define  SVRPORT 1234
+#define  SVRPORT 12345
 typedef struct sockaddr SA;
 
 //For semaphores (from sys/sem.h)
@@ -53,10 +53,23 @@ int readn(int fd, void* vptr, size_t n);
 int writen(int fd, const void* vptr, size_t n);
 int readline(int fd, void* vptr, size_t maxlen);
 
+int setsock_reuse(int fd);
+
 //自动生成wrapper.cpp
 //格式: /*cond:(ret < 0)*/
 ////////////////////////////////////////
+
+/*gen_start*/
+
+//network
+int Socket(int domain, int type, int protocol); 
+int Bind(int socket, const struct sockaddr *address, socklen_t address_len);
+int Listen(int socket, int backlog);
+int Connect(int socket, const struct sockaddr *address, socklen_t address_len);
+int Inet_pton(int af, const char * src, void * dst); 
+int Setsockopt(int socket, int level, int option_name, const void *option_value, socklen_t option_len);
+
 //posix mqueue
 #ifdef __LINUX__
-	mqd_t Mq_open(const char *name, int oflag); /*gen*/
+	mqd_t Mq_open(const char *name, int oflag); 
 #endif

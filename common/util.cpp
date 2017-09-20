@@ -105,3 +105,8 @@ int readline(int fd, void* vptr, size_t maxlen){
 	return ptr - (char*)vptr;
 }
 
+int setsock_reuse(int sockfd){
+	int opt = 1;
+
+	return Setsockopt(sockfd,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
+}
