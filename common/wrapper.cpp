@@ -92,4 +92,40 @@ mqd_t Mq_open(const char *name, int oflag)
 	return ret;
 }
 
+int Mq_getattr(mqd_t mqdes, struct mq_attr *attr)
+{
+	int ret = mq_getattr(mqdes, attr);
+	if(ret < 0){
+		err_quit("call failed mq_getattr(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
+	}
+	return ret;
+}
+
+int Mq_setattr(mqd_t mqdes, const struct mq_attr *newattr, struct mq_attr *oldattr)
+{
+	int ret = mq_setattr(mqdes, newattr, oldattr);
+	if(ret < 0){
+		err_quit("call failed mq_setattr(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
+	}
+	return ret;
+}
+
+int Mq_unlink(const char *name)
+{
+	int ret = mq_unlink(name);
+	if(ret < 0){
+		err_quit("call failed mq_unlink(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
+	}
+	return ret;
+}
+
+int Mq_close(mqd_t mqdes)
+{
+	int ret = mq_close(mqdes);
+	if(ret < 0){
+		err_quit("call failed mq_close(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
+	}
+	return ret;
+}
+
 #endif

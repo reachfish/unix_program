@@ -48,6 +48,8 @@ typedef struct sockaddr SA;
 
 #define MAX_LINE 100
 
+#define show_msg err_msg
+
 #include <signal.h>
 typedef void Sigfunc(int);
 Sigfunc *Signal(int signo, Sigfunc* func);
@@ -85,4 +87,8 @@ ssize_t Recvfrom(int socket, void *buffer, size_t length, int flags, struct sock
 //posix mqueue
 #ifdef __linux__
 	mqd_t Mq_open(const char *name, int oflag); 
+	int Mq_getattr(mqd_t mqdes, struct mq_attr *attr);
+	int Mq_setattr(mqd_t mqdes, const struct mq_attr *newattr, struct mq_attr *oldattr);
+	int Mq_unlink(const char *name);
+	int Mq_close(mqd_t mqdes);
 #endif
