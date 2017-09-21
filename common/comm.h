@@ -16,7 +16,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-#ifdef __LINUX__
+#ifdef __linux__
 	#include <mqueue.h>
 #endif
 
@@ -38,7 +38,7 @@ typedef struct sockaddr SA;
 #define SHM_R 0400 /* read permission */
 #define SHM_W 0200 /* write permission */
 
-#ifdef __LINUX__  
+#ifdef __linux__  
 	#define SVMSG_MODE  0660  
 #else  
 	#define SVMSG_MODE  MSG_R | MSG_W  
@@ -52,6 +52,7 @@ typedef struct sockaddr SA;
 typedef void Sigfunc(int);
 Sigfunc *Signal(int signo, Sigfunc* func);
 
+void err_msg(const char* fmt, ...);
 void err_quit(const char* fmt, ...);
 
 int readn(int fd, void* vptr, size_t n);
@@ -82,6 +83,6 @@ ssize_t Sendto(int socket, const void *buffer, size_t length, int flags, const s
 ssize_t Recvfrom(int socket, void *buffer, size_t length, int flags, struct sockaddr *address, socklen_t *address_len);
 
 //posix mqueue
-#ifdef __LINUX__
+#ifdef __linux__
 	mqd_t Mq_open(const char *name, int oflag); 
 #endif

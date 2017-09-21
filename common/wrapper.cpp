@@ -81,7 +81,7 @@ ssize_t Recvfrom(int socket, void *buffer, size_t length, int flags, struct sock
 	return ret;
 }
 
-#ifdef __LINUX__
+#ifdef __linux__
 
 mqd_t Mq_open(const char *name, int oflag)
 {
