@@ -71,6 +71,9 @@ int daemon_init(const char* pname, int facility);
 
 /*gen_start*/
 
+//unix
+int Getopt(int argc, char * const *argv, const char *optstring);
+
 //process
 pid_t Fork(void);
 
@@ -91,4 +94,6 @@ ssize_t Recvfrom(int socket, void *buffer, size_t length, int flags, struct sock
 	int Mq_setattr(mqd_t mqdes, const struct mq_attr *newattr, struct mq_attr *oldattr);
 	int Mq_unlink(const char *name);
 	int Mq_close(mqd_t mqdes);
+	int Mq_send(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_prio);
+	ssize_t Mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio);
 #endif

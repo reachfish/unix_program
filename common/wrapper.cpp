@@ -1,5 +1,14 @@
 #include "comm.h"
 
+int Getopt(int argc, char * const *argv, const char *optstring)
+{
+	int ret = getopt(argc, argv, optstring);
+	if(ret < 0){
+		err_quit("call failed getopt(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
+	}
+	return ret;
+}
+
 pid_t Fork(void)
 {
 	pid_t ret = fork();
@@ -124,6 +133,24 @@ int Mq_close(mqd_t mqdes)
 	int ret = mq_close(mqdes);
 	if(ret < 0){
 		err_quit("call failed mq_close(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
+	}
+	return ret;
+}
+
+int Mq_send(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_prio)
+{
+	int ret = mq_send(mqdes, msg_ptr, msg_len, msg_prio);
+	if(ret < 0){
+		err_quit("call failed mq_send(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
+	}
+	return ret;
+}
+
+ssize_t Mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio)
+{
+	ssize_t ret = mq_receive(mqdes, msg_ptr, msg_len, msg_prio);
+	if(ret < 0){
+		err_quit("call failed mq_receive(%s:%d): %s.", __FILE__, __LINE__, strerror(errno));
 	}
 	return ret;
 }
