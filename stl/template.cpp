@@ -138,8 +138,52 @@ void test_5(){
 	std::for_each(a, a + ARRAY_SIZE(a), template_foo_5<int>());
 }
 /*********************************************/
+//topic_6: 静态常数成员在类内部初始化
+
+template<class T>
+struct template_foo_6{
+	static const int _kCount = 100;
+};
+
+void test_6(){
+}
+/*********************************************/
+//topic_7: increment/decrement/dereference 运算子
+//前进、后退、取值
+
+class integer{
+	public:
+		integer(int i):_i(i){}
+
+		//前缀自加
+		integer& operator++(){
+			++_i;
+			return *this;
+		}
+
+		//后缀自加
+		const integer operator++(int){
+			integer tmp = *this;
+			++(*this);
+			return tmp;
+		}
+
+		int& operator*(){
+			return _i;
+		}
+
+	private:
+		int _i;
+};
+
+void test_7(){
+	integer I(10);
+	I++;
+	std::cout<<*I<<std::endl;
+}
+/*********************************************/
 
 int main(){
-	test_5();
+	test_7();
 	return 0;
 }
